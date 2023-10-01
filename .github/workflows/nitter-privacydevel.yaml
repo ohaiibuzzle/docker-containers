@@ -18,9 +18,12 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-nitter:
+  build-nitter-amd64:
     name: Build and push Docker image
     runs-on: ubuntu-latest
+    strategy:
+        matrix:
+          arch: [arm64, amd64]
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -39,11 +42,25 @@ jobs:
         run: |
           git clone --depth=1 https://github.com/PrivacyDevel/nitter.git nitter-privacydevel
 
-      - name: Build and push Docker image
+      - if: matrix.arch == amd64
+        name: Build and push Docker image (amd64)
         uses: docker/build-push-action@v5
         with:
           context: "./nitter-privacydevel"
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ghcr.io/ohaiibuzzle/nitter-privacydevel:latest
+
+      - if: matrix.arch == arm64
+        name: Build and push Docker image (arm64)
+        uses: docker/build-push-action@v5
+        with:
+          context: "./nitter-privacydevel"
+          platforms: linux/arm64/v8
+          file: Dockerfile.arm64
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
