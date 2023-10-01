@@ -65,4 +65,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           tags: |
-            ghcr.io/ohaiibuzzle/nitter-privacydevel:latest
+            ghcr.io/ohaiibuzzle/nitter-privacydevel:latest-arm64
