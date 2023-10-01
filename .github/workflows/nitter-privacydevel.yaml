@@ -60,7 +60,7 @@ jobs:
         with:
           context: "./nitter-privacydevel"
           platforms: linux/arm64/v8
-          file: Dockerfile.arm64
+          file: './nitter-privacydevel/Dockerfile.arm64'
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
